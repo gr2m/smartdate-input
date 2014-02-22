@@ -10,6 +10,7 @@
   var SmartDate = function (el) {
     var $input;
     var defaultFormat = 'dddd, MMMM D, YYYY h:mma';
+    var formatChangeEventType = 'blur';
     var format;
     var api = this;
 
@@ -18,7 +19,11 @@
     function initialize() {
       $input = $(el);
 
-      $input.on('input', handleInput);
+      if ($input.data('format-event')) {
+        formatChangeEventType = $input.data('format-event');
+        $input.removeAttr('data-format-event');
+      }
+      $input.on(formatChangeEventType, handleFormatChangeEvent);
     }
 
     // PUBLIC API
@@ -50,6 +55,11 @@
       format = newFormat;
       api.set(currentDate);
     };
+    api.setEvent = function setEvent(eventType) {
+      $input.unbind(formatChangeEventType, handleFormatChangeEvent);
+      formatChangeEventType = eventType;
+      $input.on(formatChangeEventType, handleFormatChangeEvent);
+    };
 
 
     // Event handlers
@@ -58,7 +68,7 @@
     //
     //
     //
-    function handleInput( /*event*/ ) {
+    function handleFormatChangeEvent( /*event*/ ) {
       parseFormat($input.val());
     }
 
@@ -108,7 +118,8 @@
   // =======================
 
   $(document).on('input.bs.smartDate.data-api', '[data-smartdate-spy]', function(event) {
+    event.preventDefault();
     $(event.target).smartDate().removeAttr('data-smartdate-spy');
-    $(event.target).trigger(event.type);
+    $(event.target).trigger(event);
   });
 })(jQuery, moment);
