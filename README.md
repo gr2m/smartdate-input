@@ -28,6 +28,11 @@ $input.smartDate('set', new Date);
 // set/change format
 $input.smartDate('setFormat', 'dddd, MMMM Do, YYYY h:mma');
 
+// also possible:
+$input.smartDate({
+  format: 'dddd, MMMM Do, YYYY h:mma'
+})
+
 // listen to format changes
 $input.on('change:format', function(event, newFormat) {
   // store newFormat as the user's preferred datetime format
