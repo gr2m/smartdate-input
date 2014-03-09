@@ -1,6 +1,6 @@
 {
   "name": "moment-parseformat",
-  "version": "0.0.6",
+  "version": "0.0.10",
   "description": "A moment.js plugin to extract the format of a date/time string",
   "main": "moment.parseFormat.js",
   "scripts": {
@@ -22,6 +22,12 @@
   },
   "homepage": "http://gr2m.github.io/moment.parseFormat",
   "dependencies": {
-    "moment": "~2.5.1"
+    "moment": "git://github.com/moment/moment.git#d3da8f7b504aee57fe610e1aa103c1702a7f945e"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.2",
+    "grunt-contrib-qunit": "~0.4.0",
+    "grunt-contrib-watch": "~0.5.3",
+    "grunt-bump": "0.0.13"
   }
 }

@@ -1,8 +1,18 @@
-/* global moment */
+'use strict';
 
-(function(moment){
-  'use strict';
-
+(function (root, factory) {
+  /* global define */
+  if (typeof define === 'function' && define.amd) {
+    define(['moment'], function (moment) {
+      moment.parseFormat = factory(moment);
+      return moment.parseFormat;
+    });
+  } else if (typeof exports === 'object') {
+    module.exports = factory(require('moment'));
+  } else {
+    root.moment.parseFormat = factory(root.moment);
+  }
+})(this, function (/*moment*/) { // jshint ignore:line
   var dayNames =  [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   var abbreviatedDayNames =  [ 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   var shortestDayNames = ['Su','Mo','Tu','We','Th','Fr','Sa'];
@@ -18,12 +28,9 @@
   var regexAbbreviatedMonthNames = new RegExp( abbreviatedMonthNames.join('|'), 'i' );
 
   var regexFirstSecondThirdFourth = /(\d+)(st|nd|rd|th)\b/i;
-  var regexBigEndianLong = /(\d{4})\-(\d{1,2})\-(\d{1,2})/;
-  var regexBigEndianShort = /(\d{2})\-(\d{1,2})\-(\d{1,2})/;
-  var regexLittleEndianLong = /(\d{1,2})\.(\d{1,2})\.(\d{4})/;
-  var regexLittleEndianShort = /(\d{1,2})\.(\d{1,2})\.(\d{2})/;
-  var regexMiddleEndianLong = /(\d{1,2})\/(\d{1,2})\/(\d{4})/;
-  var regexMiddleEndianShort = /(\d{1,2})\/(\d{1,2})\/(\d{2})/;
+  var regexBigEndian = /(\d{2,4})\-(\d{1,2})\-(\d{1,2})/;
+  var regexLittleEndian = /(\d{1,2})\.(\d{1,2})\.(\d{2,4})/;
+  var regexMiddleEndian = /(\d{1,2})\/(\d{1,2})\/(\d{2,4})/;
 
   var amOrPm = '('+[amDesignator,pmDesignator].join('|')+')';
   var regexHoursMinutesSecondsAmPm = new RegExp( '\\d{1,2}\\:\\d{1,2}\\:\\d{1,2}(\\s*)' + amOrPm,  'i' );
@@ -66,16 +73,13 @@
     // DAY - MONTH - YEAR ORDER
 
     // 03-04-05 ☛ yy-
-    format = format.replace( regexBigEndianLong, 'YYYY-MM-DD');
-    format = format.replace( regexBigEndianShort, 'YY-MM-DD');
+    format = format.replace( regexBigEndian, replaceBigEndian);
 
     // Little-endian (day, month, year), e.g. 05.04.03
-    format = format.replace(regexLittleEndianLong, 'DD.MM.YYYY');
-    format = format.replace(regexLittleEndianShort, 'DD.MM.YY');
+    format = format.replace(regexLittleEndian, replaceLittleEndian);
 
     // Middle-endian (month, day, year), e.g. 04/05/03
-    format = format.replace( regexMiddleEndianLong, 'MM/DD/YYYY');
-    format = format.replace( regexMiddleEndianShort, 'MM/DD/YY');
+    format = format.replace( regexMiddleEndian, replaceMiddleEndian);
 
     // TIME
 
@@ -106,5 +110,60 @@
     return format;
   }
 
-  moment.parseFormat = parseDateFormat;
-})(moment);
+  // 2014-01-01 → YYYY-MM-DD
+  // 14-01-01 → YY-MM-DD
+  // 14-1-1 → YY-M-D
+  // 2014-1-1 → YYYY-M-D
+  function replaceBigEndian (_, year, month, day) {
+    return replaceDayMonthYearNr({
+      day: day,
+      month: month,
+      year: year
+    }, ['year', 'month','day'], '-');
+  }
+
+  // 01.01.2014 → DD.MM.YYYY
+  // 01.01.14 → DD.MM.YY
+  // 1.1.14 → D.M.YY
+  // 1.1.2014 → D.M.YYYY
+  function replaceLittleEndian (_, day, month, year) {
+    return replaceDayMonthYearNr({
+      day: day,
+      month: month,
+      year: year
+    }, ['day','month','year'], '.');
+  }
+
+  // 01/01/2014 → DD/MM/YYYY
+  // 01/01/14 → DD/MM/YY
+  // 1/1/14 → D/M/YY
+  // 1/1/2014 → D/M/YYYY
+  function replaceMiddleEndian (_, month, day, year) {
+    return replaceDayMonthYearNr({
+      day: day,
+      month: month,
+      year: year
+    }, ['month','day','year'], '/');
+  }
+
+  //
+  // Replaces year to YYYY or YY, depending on length of match.
+  // Replacing day/month with one or two format (D or DD, M or MM),
+  // depending on whether on of the matches has a lenght of 1
+  //
+  function replaceDayMonthYearNr (parts, order, separator) {
+    parts.year = (parts.year.length === 2) ? 'YY' : 'YYYY';
+    if (Math.min(parts.day.length, parts.month.length) === 1) {
+      parts.day = 'D';
+      parts.month = 'M';
+    } else {
+      parts.day = 'DD';
+      parts.month = 'MM';
+    }
+    return order.map(function(name) {
+      return parts[name];
+    }).join(separator);
+  }
+
+  return parseDateFormat;
+});
