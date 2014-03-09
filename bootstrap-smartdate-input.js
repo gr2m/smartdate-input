@@ -19,6 +19,12 @@
     function initialize() {
       $input = $(el);
 
+      if ($input.data('format')) {
+        format = $input.data('format');
+        $input.removeAttr('data-format');
+      } else {
+        format = defaultFormat;
+      }
       if ($input.data('format-event')) {
         formatChangeEventType = $input.data('format-event');
         $input.removeAttr('data-format-event');
@@ -38,7 +44,7 @@
         dateString = date;
       } else {
         // Date Object
-        dateString = moment(date).format(format || defaultFormat);
+        dateString = moment(date).format(format);
       }
       $input.val(dateString);
       parseFormat(dateString);
@@ -60,6 +66,9 @@
       formatChangeEventType = eventType;
       $input.on(formatChangeEventType, handleFormatChangeEvent);
     };
+    api.getFormat = function(callback) {
+      callback(format);
+    };
 
 
     // Event handlers
@@ -80,14 +89,32 @@
     //
     //
     function parseFormat (dateString) {
-      var newFormat = moment.parseFormat(dateString);
-      var check = moment(dateString, newFormat).format(newFormat);
+      var newFormat;
+      var oldFormatCheck;
+      var newFormatCheck;
+
+      // Stop if newFormat is same as old
+      newFormat = moment.parseFormat(dateString);
+      if (newFormat === format) return;
+
+      // Stop if old format still fits
+      oldFormatCheck = moment(dateString, format).format(format);
+      if (dateString === oldFormatCheck) return;
+
+      // Stop if new format cannot parse dateString correctly
+      newFormatCheck = moment(dateString, newFormat).format(newFormat);
+      if (dateString !== newFormatCheck) return;
 
       // sanity check
-      if (dateString === check && newFormat !== format) {
-        format = newFormat;
-        $input.trigger('change:format', [newFormat]);
-      }
+      console.log(dateString, 'dateString')
+      console.log(oldFormatCheck, 'oldFormatCheck')
+      console.log(newFormatCheck, 'newFormatCheck')
+      console.log(format, 'format')
+      console.log(newFormat, 'newFormat')
+      console.log('')
+
+      format = newFormat;
+      $input.trigger('change:format', [newFormat]);
     }
 
     initialize();
@@ -118,8 +145,11 @@
   // =======================
 
   $(document).on('input.bs.smartDate.data-api', '[data-smartdate-spy]', function(event) {
+    var $input = $(event.target);
     event.preventDefault();
-    $(event.target).smartDate().removeAttr('data-smartdate-spy');
-    $(event.target).trigger(event);
+    event.stopImmediatePropagation();
+    $input.removeAttr('data-smartdate-spy');
+    $input.smartDate();
+    $input.trigger( $.Event(event) );
   });
 })(jQuery, moment);

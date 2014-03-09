@@ -95,10 +95,12 @@
       $format.text(format);
       $check.text( moment(moonlandingTime).format(format) )
     });
-    $input.smartDate('set'); // sets to now
     $('.suggestions').on('click', 'li', function(event) {
       $input.smartDate('set', $(event.currentTarget).text() );
     });
+
+    // init with current date & show current format
+    $input.smartDate('set').trigger('change:format', ['dddd, MMMM D, YYYY h:mma']); // sets to now
   </script>
 </body>
 </html>

@@ -54,7 +54,7 @@ You can also set the default date format:
 Or the event when it shall check for & trigger `change:format`
 
 ```
-<input data-smartdate-spy data-event="input">
+<input data-smartdate-spy data-format-event="input">
 ```
 
 Fine Print
