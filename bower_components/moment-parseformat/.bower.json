@@ -35,6 +35,6 @@
     "commit": "7634255668546167c326d455f1d3420eb5f9f425"
   },
   "_source": "git://github.com/gr2m/moment.parseFormat.git",
-  "_target": "~0.0.6",
+  "_target": "~0.0.1",
   "_originalSource": "moment-parseformat"
 }
