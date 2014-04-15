@@ -116,7 +116,6 @@
       newTimestamp = parseTimestamp(dateString);
       if (newTimestamp !== timestamp) {
         timestamp = newTimestamp;
-        console.log('new timestamp:\n%s', newTimestamp)
         $input.trigger('change:timestamp', [newTimestamp]);
       }
     }
@@ -139,7 +138,6 @@
     //
     function parseFormat (dateString) {
       var newFormat;
-      var newTimestamp;
       var oldFormatCheck;
       var newFormatCheck;
 
