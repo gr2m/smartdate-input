@@ -23,13 +23,14 @@ var $input = $('input');
 $input.smartDate();
 
 // set value to Date
-$input.smartDate('set', new Date);
+$input.smartDate('set', new Date());
 
 // set/change format
 $input.smartDate('setFormat', 'dddd, MMMM Do, YYYY h:mma');
 
 // also possible:
 $input.smartDate({
+  date: new Date(),
   format: 'dddd, MMMM Do, YYYY h:mma'
 })
 
@@ -38,8 +39,13 @@ $input.on('change:format', function(event, newFormat) {
   // store newFormat as the user's preferred datetime format
 });
 
-// per default, change:format will be checked for and triggered
-// on blur event. This can be changed with the setEvent method
+// listen to changes of the parsed timestamp
+$input.on('change:timestamp', function(event, timestamp) {
+  // store the timestamp that was parsed from the raw date/time string
+});
+
+// per default, change:format & change:timestamp will be checked for
+// and triggered on blur. This can be changed with the setEvent method
 $input.smartDate('setEvent', 'input');
 ```
 

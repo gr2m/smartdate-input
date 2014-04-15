@@ -13,6 +13,7 @@
     var defaultFormat = 'dddd, MMMM D, YYYY h:mma';
     var defaultFormatChangeEventType = 'blur';
     var api = this;
+    var timestamp;
 
     settings = settings || {};
 
@@ -31,7 +32,7 @@
 
       $input.removeAttr('data-format');
 
-      settings.event = settings.event || $input.data('format-format-event') || defaultFormatChangeEventType;
+      settings.event = settings.event || $input.data('format-event') || defaultFormatChangeEventType;
       $input.removeAttr('data-format-event');
 
       $input.on(settings.event, handleFormatChangeEvent);
@@ -56,11 +57,12 @@
       if (typeof date === 'string') {
         dateString = date;
       } else {
-        // Date Object
+        // turning Date Object into string
         dateString = moment(date).format(settings.format);
       }
       $input.val(dateString);
-      parseFormat(dateString);
+      settings.format = parseFormat(dateString);
+      timestamp = parseTimestamp(dateString);
     };
     api.setFormat = function setFormat(newFormat) {
       var val = $input.val();
@@ -91,7 +93,7 @@
 
       if (! val) return callback();
 
-      parseFormat(val);
+      settings.format = parseFormat(val);
       currentDate = moment(val, settings.format).toDate();
       callback(currentDate);
     };
@@ -104,7 +106,19 @@
     //
     //
     function handleFormatChangeEvent( /*event*/ ) {
-      parseFormat($input.val());
+      var dateString = $input.val();
+      var newFormat = parseFormat(dateString);
+      var newTimestamp;
+      if (settings.format !== newFormat) {
+        settings.format = newFormat;
+        $input.trigger('change:format', [newFormat]);
+      }
+      newTimestamp = parseTimestamp(dateString);
+      if (newTimestamp !== timestamp) {
+        timestamp = newTimestamp;
+        console.log('new timestamp:\n%s', newTimestamp)
+        $input.trigger('change:timestamp', [newTimestamp]);
+      }
     }
 
 
@@ -125,25 +139,35 @@
     //
     function parseFormat (dateString) {
       var newFormat;
+      var newTimestamp;
       var oldFormatCheck;
       var newFormatCheck;
 
       // Stop if newFormat is same as old
       newFormat = moment.parseFormat(dateString);
-      if (newFormat === settings.format) return;
+      if (newFormat === settings.format) return settings.format;
 
       // Stop if old format still fits
       oldFormatCheck = moment(dateString, settings.format).format(settings.format);
-      if (dateString.toLowerCase() === oldFormatCheck.toLowerCase()) return;
+      if (dateString.toLowerCase() === oldFormatCheck.toLowerCase()) return settings.format;
 
       // Stop if new format cannot parse dateString correctly
       newFormatCheck = moment(dateString, newFormat).format(newFormat);
-      if (dateString.toLowerCase() !== newFormatCheck.toLowerCase()) return;
+      if (dateString.toLowerCase() !== newFormatCheck.toLowerCase()) return settings.format;
 
       // sanity check
+      return newFormat;
+    }
 
-      settings.format = newFormat;
-      $input.trigger('change:format', [newFormat]);
+    //
+    //
+    //
+    function parseTimestamp (dateString) {
+      var m;
+      if (! settings.format) return timestamp;
+      m = moment(dateString, settings.format, true);
+      if (m.isValid()) return m.format();
+      return timestamp;
     }
 
     initialize();
