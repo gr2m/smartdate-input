@@ -23,15 +23,19 @@
       var format;
       $input = $(el);
 
+      // init format
       format = settings.format || $input.data('format') || defaultFormat;
       if (typeof format === 'function') {
         settings.format = format(settings);
       } else {
         settings.format = format;
       }
-
       $input.removeAttr('data-format');
 
+      // init timestamp
+      timestamp = settings.timestamp || $input.data('timestamp');
+
+      // init event on when to check for changed format timestamp
       settings.event = settings.event || $input.data('format-event') || defaultFormatChangeEventType;
       $input.removeAttr('data-format-event');
 
@@ -46,6 +50,7 @@
     // ----------
     api.set = function set(date) {
       var dateString;
+      var newTimestamp;
 
       if (!(date instanceof Date) && typeof date === 'object') {
         return updateSettings(date);
@@ -62,7 +67,11 @@
       }
       $input.val(dateString);
       settings.format = parseFormat(dateString);
-      timestamp = parseTimestamp(dateString);
+      newTimestamp = parseTimestamp(dateString);
+      if (newTimestamp !== timestamp) {
+        timestamp = newTimestamp;
+        $input.trigger('change:timestamp', [newTimestamp]);
+      }
     };
     api.setFormat = function setFormat(newFormat) {
       var val = $input.val();
