@@ -42,15 +42,17 @@
       $input.on(settings.event, handleFormatChangeEvent);
 
       if (settings.date) {
-        api.set(settings.date);
+        api.set(settings.date, { silent: true });
       }
     }
 
     // PUBLIC API
     // ----------
-    api.set = function set(date) {
+    api.set = function set(date, options) {
       var dateString;
       var newTimestamp;
+
+      if (! options) options = {};
 
       if (!(date instanceof Date) && typeof date === 'object') {
         return updateSettings(date);
@@ -70,7 +72,10 @@
       newTimestamp = parseTimestamp(dateString);
       if (newTimestamp !== timestamp) {
         timestamp = newTimestamp;
-        $input.trigger('change:timestamp', [newTimestamp]);
+
+        if (! options.silent) {
+          $input.trigger('change:timestamp', [newTimestamp]);
+        }
       }
     };
     api.setFormat = function setFormat(newFormat) {
