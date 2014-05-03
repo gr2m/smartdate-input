@@ -82,16 +82,15 @@
       var val = $input.val();
       var currentDate;
 
+      if (val) currentDate = moment(val, settings.format).toDate();
+
       if (typeof newFormat === 'function') {
         settings.format = newFormat(settings);
       } else {
         settings.format = newFormat;
       }
 
-      if (! val) return;
-
-      currentDate = moment(val, settings.format).toDate();
-      api.set(currentDate);
+      if (val) api.set(currentDate);
     };
     api.setEvent = function setEvent(eventType) {
       $input.unbind(settings.event, handleFormatChangeEvent);
