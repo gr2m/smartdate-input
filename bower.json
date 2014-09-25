@@ -26,6 +26,6 @@
     "bootstrap": "~3.1.0"
   },
   "dependencies": {
-    "moment-parseformat": "~0.0.10"
+    "moment-parseformat": "~0.0.13"
   }
 }

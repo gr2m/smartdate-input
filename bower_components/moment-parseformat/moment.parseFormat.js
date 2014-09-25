@@ -28,25 +28,41 @@
   var regexAbbreviatedMonthNames = new RegExp( abbreviatedMonthNames.join('|'), 'i' );
 
   var regexFirstSecondThirdFourth = /(\d+)(st|nd|rd|th)\b/i;
-  var regexBigEndian = /(\d{2,4})\-(\d{1,2})\-(\d{1,2})/;
-  var regexLittleEndian = /(\d{1,2})\.(\d{1,2})\.(\d{2,4})/;
-  var regexMiddleEndian = /(\d{1,2})\/(\d{1,2})\/(\d{2,4})/;
+  var regexEndian = /(\d{1,4})([\/\.\-])(\d{1,2})[\/\.\-](\d{1,4})/;
 
+  var regexTimezone = /\+\d\d:\d\d$/
   var amOrPm = '('+[amDesignator,pmDesignator].join('|')+')';
+  var regexHoursWithLeadingZeroDigitMinutesSecondsAmPm = new RegExp( '0\\d\\:\\d{1,2}\\:\\d{1,2}(\\s*)' + amOrPm,  'i' );
+  var regexHoursWithLeadingZeroDigitMinutesAmPm = new RegExp( '0\\d\\:\\d{1,2}(\\s*)' + amOrPm,  'i' );
+  var regexHoursWithLeadingZeroDigitAmPm = new RegExp( '0\\d(\\s*)' + amOrPm,  'i' );
   var regexHoursMinutesSecondsAmPm = new RegExp( '\\d{1,2}\\:\\d{1,2}\\:\\d{1,2}(\\s*)' + amOrPm,  'i' );
   var regexHoursMinutesAmPm = new RegExp( '\\d{1,2}\\:\\d{1,2}(\\s*)' + amOrPm,  'i' );
   var regexHoursAmPm = new RegExp( '\\d{1,2}(\\s*)' + amOrPm,  'i' );
 
+  var regexHoursWithLeadingZeroMinutesSeconds = /0\d:\d{2}:\d{2}/;
+  var regexHoursWithLeadingZeroMinutes = /0\d:\d{2}/;
   var regexHoursMinutesSeconds = /\d{1,2}:\d{2}:\d{2}/;
   var regexHoursMinutes = /\d{1,2}:\d{2}/;
   var regexYearLong = /\d{4}/;
+  var regexDayLeadingZero = /0\d/;
   var regexDay = /\d{1,2}/;
   var regexYearShort = /\d{2}/;
 
   var regexFillingWords = /\b(at)\b/i;
 
-  function parseDateFormat(dateString) {
+  // option defaults
+  var defaultOrder = {
+    '/': 'MDY',
+    '.': 'DMY',
+    '-': 'YMD'
+  };
+
+  function parseDateFormat(dateString, options) {
     var format = dateString;
+
+    // default options
+    options = options || {};
+    options.preferredOrder = options.preferredOrder || defaultOrder;
 
     // escape filling words
     format = format.replace(regexFillingWords, '[$1]');
@@ -70,30 +86,33 @@
     // Jan ☛ MMM
     format = format.replace( regexAbbreviatedMonthNames, 'MMM');
 
-    // DAY - MONTH - YEAR ORDER
-
-    // 03-04-05 ☛ yy-
-    format = format.replace( regexBigEndian, replaceBigEndian);
-
-    // Little-endian (day, month, year), e.g. 05.04.03
-    format = format.replace(regexLittleEndian, replaceLittleEndian);
-
-    // Middle-endian (month, day, year), e.g. 04/05/03
-    format = format.replace( regexMiddleEndian, replaceMiddleEndian);
+    // replace endians, like 8/20/2010, 20.8.2010 or 2010-8-20
+    format = format.replace( regexEndian, replaceEndian.bind(null, options));
 
     // TIME
 
+    // timezone +02:00 ☛ Z
+    format = format.replace(regexTimezone, 'Z');
+
+    // 05:30:20pm ☛ hh:mm:ssa
+    format = format.replace(regexHoursWithLeadingZeroDigitMinutesSecondsAmPm, 'hh:mm:ss$1a');
     // 10:30:20pm ☛ h:mm:ssa
     format = format.replace(regexHoursMinutesSecondsAmPm, 'h:mm:ss$1a');
+    // 05:30pm ☛ hh:mma
+    format = format.replace(regexHoursWithLeadingZeroDigitMinutesAmPm, 'hh:mm$1a');
     // 10:30pm ☛ h:mma
     format = format.replace(regexHoursMinutesAmPm, 'h:mm$1a');
+    // 05pm ☛ hha
+    format = format.replace(regexHoursWithLeadingZeroDigitAmPm, 'hh$1a');
     // 10pm ☛ ha
     format = format.replace(regexHoursAmPm, 'h$1a');
-
+    // 05:30:20 ☛ HH:mm:ss
+    format = format.replace(regexHoursWithLeadingZeroMinutesSeconds, 'HH:mm:ss');
     // 10:30:20 ☛ H:mm:ss
     format = format.replace(regexHoursMinutesSeconds, 'H:mm:ss');
-
-    // 10:30 ☛ H:mm
+    // 05:30 ☛ H:mm
+    format = format.replace(regexHoursWithLeadingZeroMinutes, 'HH:mm');
+    // 10:30 ☛ HH:mm
     format = format.replace(regexHoursMinutes, 'H:mm');
 
     // do we still have numbers left?
@@ -102,6 +121,7 @@
     format = format.replace(regexYearLong, 'YYYY');
 
     // now, the next number, if existing, must be a day
+    format = format.replace(regexDayLeadingZero, 'DD');
     format = format.replace(regexDay, 'D');
 
     // last but not least, there could still be a year left
@@ -110,59 +130,60 @@
     return format;
   }
 
-  // 2014-01-01 → YYYY-MM-DD
-  // 14-01-01 → YY-MM-DD
-  // 14-1-1 → YY-M-D
-  // 2014-1-1 → YYYY-M-D
-  function replaceBigEndian (_, year, month, day) {
-    return replaceDayMonthYearNr({
-      day: day,
-      month: month,
-      year: year
-    }, ['year', 'month','day'], '-');
-  }
+  // if we can't find an endian based on the separator, but
+  // there still is a short date with day, month & year,
+  // we try to make a smart decision to identify the order
+  function replaceEndian(options, matchedPart, first, separator, second, third) {
+    var parts;
+    var hasSingleDigit = Math.min(first.length, second.length, third.length) === 1;
+    var hasQuadDigit = Math.max(first.length, second.length, third.length) === 4;
+    var index = -1;
+    var preferredOrder = typeof options.preferredOrder === 'string' ? options.preferredOrder : options.preferredOrder[separator];
 
-  // 01.01.2014 → DD.MM.YYYY
-  // 01.01.14 → DD.MM.YY
-  // 1.1.14 → D.M.YY
-  // 1.1.2014 → D.M.YYYY
-  function replaceLittleEndian (_, day, month, year) {
-    return replaceDayMonthYearNr({
-      day: day,
-      month: month,
-      year: year
-    }, ['day','month','year'], '.');
-  }
+    first = parseInt(first, 10);
+    second = parseInt(second, 10);
+    third = parseInt(third, 10);
+    parts = [first, second, third];
+    preferredOrder = preferredOrder.toUpperCase();
 
-  // 01/01/2014 → DD/MM/YYYY
-  // 01/01/14 → DD/MM/YY
-  // 1/1/14 → D/M/YY
-  // 1/1/2014 → D/M/YYYY
-  function replaceMiddleEndian (_, month, day, year) {
-    return replaceDayMonthYearNr({
-      day: day,
-      month: month,
-      year: year
-    }, ['month','day','year'], '/');
-  }
-
-  //
-  // Replaces year to YYYY or YY, depending on length of match.
-  // Replacing day/month with one or two format (D or DD, M or MM),
-  // depending on whether on of the matches has a lenght of 1
-  //
-  function replaceDayMonthYearNr (parts, order, separator) {
-    parts.year = (parts.year.length === 2) ? 'YY' : 'YYYY';
-    if (Math.min(parts.day.length, parts.month.length) === 1) {
-      parts.day = 'D';
-      parts.month = 'M';
-    } else {
-      parts.day = 'DD';
-      parts.month = 'MM';
+    // If first is a year, order will always be Year-Month-Day
+    if (first > 31) {
+      parts[0] = hasQuadDigit ? 'YYYY' : 'YY';
+      parts[1] = hasSingleDigit ? 'M' : 'MM';
+      parts[2] = hasSingleDigit ? 'D' : 'DD';
+      return parts.join(separator);
     }
-    return order.map(function(name) {
-      return parts[name];
-    }).join(separator);
+
+    // Second will never be the year. And if it is a day,
+    // the order will always be Month-Day-Year
+    if (second > 12) {
+      parts[0] = hasSingleDigit ? 'M' : 'MM';
+      parts[1] = hasSingleDigit ? 'D' : 'DD';
+      parts[2] = hasQuadDigit ? 'YYYY' : 'YY';
+      return parts.join(separator);
+    }
+
+    // if third is a year ...
+    if (third > 31) {
+      parts[2] = hasQuadDigit ? 'YYYY' : 'YY';
+
+      // ... try to find day in first and second.
+      // If found, the remaining part is the month.
+      index = first > 12 ? 0 : second > 12 ? 1 : -1;
+      if (index !== -1) {
+        parts[index] = hasSingleDigit ? 'D' : 'DD';
+        index = index === 0 ? 1 : 0;
+        parts[index] = hasSingleDigit ? 'M' : 'MM';
+        return parts.join(separator);
+      }
+    }
+
+    // if we had no luck until here, we use the preferred order
+    parts[preferredOrder.indexOf('D')] = hasSingleDigit ? 'D' : 'DD';
+    parts[preferredOrder.indexOf('M')] = hasSingleDigit ? 'M' : 'MM';
+    parts[preferredOrder.indexOf('Y')] = hasQuadDigit ? 'YYYY' : 'YY';
+
+    return parts.join(separator);
   }
 
   return parseDateFormat;
