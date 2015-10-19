@@ -91,12 +91,17 @@
     var $check = $('var[name=check]');
     var moonlandingTime = new Date('July 24, 1969, 16:50:35');
     var $input = $('input');
-    $input.on('change:format', function(event, format) {
+
+    $input.on('change:format change:timestamp', function(event, data) {
+      var dateString = $input.val();
+      var format = moment.parseFormat(dateString);
+
       $format.text(format);
-      $check.text( moment(moonlandingTime).format(format) )
+      $check.text( moment(moonlandingTime).format(format) );
     });
-    $('.suggestions').on('click', 'li', function(event) {
-      $input.smartDate('set', $(event.currentTarget).text() );
+
+    $('.suggestions').on('click', 'li', function (event) {
+      $input.smartDate('set', $(event.currentTarget).text());
     });
 
     // init with current date & show current format
