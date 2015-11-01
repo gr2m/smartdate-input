@@ -1,4 +1,3 @@
-/* global moment */
 (function ($, moment) {
   'use strict'
 
@@ -221,4 +220,4 @@
     $input.smartDate()
     $input.trigger($.Event(event))
   })
-})(jQuery, moment) // eslint-disable-line
+})(global.jQuery, global.moment) // eslint-disable-line
