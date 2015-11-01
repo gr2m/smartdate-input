@@ -15,10 +15,10 @@ function cleanup {
   fi
 
   # kill static server
-  SERVER_PID=`ps -ef | grep 'smartdate-input/node_modules/.bin/static' | grep -v grep | awk '{print $2}'`
+  SERVER_PID=`ps -ef | grep 'bin/demo-server.js' | grep -v grep | awk '{print $2}'`
   if [ "$SERVER_PID" ] ; then
     kill -9 $SERVER_PID
-    echo "Killed static ($SERVER_PID)"
+    echo "Killed beefy ($SERVER_PID)"
   fi
 }
 
