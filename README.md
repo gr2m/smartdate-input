@@ -3,9 +3,9 @@ smartDate Input – a jQuery plugin
 
 > A jQuery plugin that understands human date/time inputs & their format
 
-[![Build Status](https://travis-ci.org/gr2m/initials.svg?branch=master)](https://travis-ci.org/gr2m/initials)
-[![Dependency Status](https://david-dm.org/gr2m/initials.svg)](https://david-dm.org/gr2m/initials)
-[![devDependency Status](https://david-dm.org/gr2m/initials/dev-status.svg)](https://david-dm.org/gr2m/initials#info=devDependencies)
+[![Build Status](https://travis-ci.org/gr2m/smartdate-input.svg?branch=master)](https://travis-ci.org/gr2m/smartdate-input)
+[![Dependency Status](https://david-dm.org/gr2m/smartdate-input.svg)](https://david-dm.org/gr2m/smartdate-input)
+[![devDependency Status](https://david-dm.org/gr2m/smartdate-input/dev-status.svg)](https://david-dm.org/gr2m/smartdate-input#info=devDependencies)
 
 Download
 --------
