@@ -77,7 +77,7 @@ before(function (done) {
       return
     }
 
-    if (client.runner === 'selenium') {
+    if (runner === 'selenium') {
       startSelenium(startTest)
     } else {
       startSauceConnect(startTest)
