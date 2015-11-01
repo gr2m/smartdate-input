@@ -1,6 +1,6 @@
 {
   "name": "smartdate-input",
-  "description": "A plugin that understands human date/time inputs & their format",
+  "description": "A jQuery plugin that understands human date/time inputs & their format",
   "browser": "index.js",
   "files": [
     "dist/",
