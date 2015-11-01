@@ -1,15 +1,21 @@
-smartDate Input – a Bootstrap plugin
-====================================
+smartDate Input – a jQuery plugin
+=================================
 
-> A Bootstrap plugin that understands human date/time inputs & their format
+> A jQuery plugin that understands human date/time inputs & their format
 
-Installation
-------------
+[![Build Status](https://travis-ci.org/gr2m/initials.svg?branch=master)](https://travis-ci.org/gr2m/initials)
+[![Dependency Status](https://david-dm.org/gr2m/initials.svg)](https://david-dm.org/gr2m/initials)
+[![devDependency Status](https://david-dm.org/gr2m/initials/dev-status.svg)](https://david-dm.org/gr2m/initials#info=devDependencies)
 
-Install using [bower](http://bower.io/) for usage in browser:
+Download
+--------
+
+Download latest version from http://gr2m.github.io/smartdate-input/smartdate-input.js
+
+Install using [npm](https://www.npmjs.com/):
 
 ```
-bower install --save bootstrap-smartdate-input
+npm install --save smartdate-input
 ```
 
 
