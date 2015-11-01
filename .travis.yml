@@ -14,6 +14,7 @@ before_script:
   - npm prune
 after_success:
   - npm run semantic-release
+  - if [[ $TRAVIS_BRANCH == 'master' ]]; then npm run deploy; fi
 env:
   matrix:
   - TEST_CLIENT=selenium:firefox
