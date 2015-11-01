@@ -70,5 +70,8 @@
     "sv-selenium": "^0.2.6",
     "uglify-js": "^2.5.0",
     "webdriverio": "^3.2.6"
+  },
+  "standard": {
+    "ignore": ["demo", "dist"]
   }
 }
