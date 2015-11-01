@@ -23,7 +23,7 @@
     "date",
     "parse",
     "momentjs",
-    "jquery",
+    "jquery-plugin",
     "input"
   ],
   "author": "Gregor Martynus <gregor@martynus.net>",
