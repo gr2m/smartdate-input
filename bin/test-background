@@ -34,11 +34,11 @@ fi
 if [ $CI ] ; then
   # Travis does not support Chrome, so we only start Selenium
   npm run start_selenium &
-  npm start -- -a 0.0.0.0 &
+  npm start &
 else
   mkdir -p log
   npm run start_selenium_with_chromedriver &>./log/selenium.log &
-  npm start -- -a 0.0.0.0 &>./log/server.log &
+  npm start &>./log/server.log &
 fi
 
 TEST_URL=http://0.0.0.0:8080 npm run test:mocha
