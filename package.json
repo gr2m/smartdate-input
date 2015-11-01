@@ -71,6 +71,10 @@
     "uglify-js": "^2.5.0",
     "webdriverio": "^3.2.6"
   },
+  "gh-pages-deploy": {
+    "staticpath": "demo",
+    "noprompt": true
+  },
   "standard": {
     "ignore": ["demo", "dist"]
   }
