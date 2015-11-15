@@ -51,7 +51,7 @@
   "devDependencies": {
     "beefy": "^2.1.5",
     "browserify": "^12.0.1",
-    "chai": "^3.3.0",
+    "chai": "^3.4.1",
     "chai-as-promised": "^5.1.0",
     "chalk": "^1.1.1",
     "gh-pages-deploy": "^0.3.0",
@@ -68,7 +68,7 @@
     "semantic-release": "^6.0.3",
     "standard": "^5.3.1",
     "sv-selenium": "^0.2.6",
-    "uglify-js": "^2.5.0",
+    "uglify-js": "^2.6.0",
     "webdriverio": "^3.2.6"
   },
   "gh-pages-deploy": {
