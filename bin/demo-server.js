@@ -9,7 +9,6 @@ var log = require('npmlog')
 log.level = process.env.LOG_LEVEL || 'error'
 
 var demoPath = path.resolve(__dirname, '../demo')
-console.log(path.resolve(__dirname, '../index.js'))
 var server = http.createServer(beefy({
   entries: {
     '/bundle.js': path.resolve(__dirname, '../demo/vendor.js'),
@@ -19,7 +18,7 @@ var server = http.createServer(beefy({
 }))
 
 server.listen(8080, '0.0.0.0', function () {
-  log.info('server', 'Demo server listening at 0.0.0.0:8080')
+  console.log('Demo server startet at http://0.0.0.0:8080')
   log.info('server', 'serving files from %s', demoPath)
 })
 server.on('request', function (request, response) {
