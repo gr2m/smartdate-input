@@ -18,8 +18,8 @@ after_success:
   - if [[ $TRAVIS_BRANCH == 'master' ]]; then npm run deploy; fi
 env:
   matrix:
-  - TEST_CLIENT=selenium:firefox
-  - TEST_CLIENT=saucelabs:chrome
+  - CLIENT=selenium:firefox
+  - CLIENT=saucelabs:chrome
 branches:
   except:
     - "/^v\\d+\\.\\d+\\.\\d+$/"
