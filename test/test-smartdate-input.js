@@ -1,4 +1,5 @@
-/* global describe, after, it*/
+/* global describe, it*/
+
 var chai = require('chai')
 var assert = chai.assert
 
@@ -64,9 +65,5 @@ describe('=== smartDate-input ===', function () {
         assert.strictEqual(val, '16 10 15')
       })
       .call(done)
-  })
-
-  after(function (done) {
-    this.client.end(done)
   })
 })
