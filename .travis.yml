@@ -8,6 +8,7 @@ notifications:
 node_js:
   - '4'
 before_install:
+  - npm i -g npm
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
 before_script:
