@@ -4,7 +4,7 @@ node_modules/
 .coveralls.yml
 coverage/
 demo/smartdate-input.js
-demo/bundle.js
-demo/bundle.src.js
+demo/vendor.js
+demo/vendor.src.js
 dist/
 log/
