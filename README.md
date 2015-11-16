@@ -92,7 +92,6 @@ While working on the tests, you can start Selenium / Chrome driver
 once, and then tests re-run on each save
 
 ```bash
-npm run start_selenium_with_chromedriver
 npm run test:mocha:watch
 ```
 
