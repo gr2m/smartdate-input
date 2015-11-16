@@ -107,16 +107,16 @@ LOG_LEVEL=verbose npm test
 Running tests in a different browser. Defaults to `selenium:chrome`
 
 ```bash
-TEST_CLIENT=selenium:firefox npm test
+CLIENT=selenium:firefox npm test
 ```
 
 Running tests on Sauce Labs
 
 ```bash
 # a couple of examples
-SAUCE_USERNAME=username SAUCE_ACCESS_KEY=accesskey TEST_CLIENT=saucelabs:chrome npm test
-SAUCE_USERNAME=username SAUCE_ACCESS_KEY=accesskey TEST_CLIENT='saucelabs:internet explorer' npm test
-SAUCE_USERNAME=username SAUCE_ACCESS_KEY=accesskey TEST_CLIENT='saucelabs:internet explorer:10.0:Windows 8' npm test
+SAUCELABS_USERNAME=username SAUCELABS_ACCESS_KEY=accesskey CLIENT=saucelabs:chrome npm test
+SAUCELABS_USERNAME=username SAUCELABS_ACCESS_KEY=accesskey CLIENT='saucelabs:internet explorer' npm test
+SAUCELABS_USERNAME=username SAUCELABS_ACCESS_KEY=accesskey CLIENT='saucelabs:internet explorer:10.0:Windows 8' npm test
 ```
 
 Fine Print
