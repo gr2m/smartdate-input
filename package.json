@@ -10,20 +10,15 @@
     "prebuild": "rimraf dist && mkdirp dist",
     "build": "browserify index.js -s smartdate-input -o dist/smartdate-input.js",
     "postbuild": "uglifyjs dist/smartdate-input.js -mc > dist/smartdate-input.min.js",
-    "build:demo": "browserify index.js -s smartdate-input -o demo/smartdate-input.js && browserify demo/vendor.js -o demo/bundle.src.js",
-    "postbuild:demo": "uglifyjs demo/bundle.src.js -mc > demo/bundle.js",
+    "build:demo": "browserify index.js -s smartdate-input -o demo/smartdate-input.js && browserify lib/vendor.js -o demo/vendor.src.js",
+    "postbuild:demo": "uglifyjs demo/vendor.src.js -mc > demo/vendor.js",
     "deploy": "npm run build:demo && npm run deploydocs",
     "predeploydocs": "./bin/authorize-push.js",
     "deploydocs": "gh-pages-deploy",
-    "install_selenium_and_chromedriver": "install_chromedriver && install_selenium",
-    "kill_selenium": "kill_selenium",
-    "start": "./bin/demo-server.js",
-    "start_selenium": "start_selenium",
-    "start_selenium_with_chromedriver": "start_selenium_with_chromedriver",
+    "start": "frontend-test-server",
     "pretest": "standard",
-    "test": "./bin/test-background",
-    "test:mocha": "mocha test/test-*.js",
-    "test:mocha:watch": "mocha test/test-*.js --watch --reporter min",
+    "test": "frontend-test-background mocha test/*.js",
+    "test:watch": "frontend-test-background mocha test/*.js --watch --reporter min",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "repository": {
@@ -44,32 +39,24 @@
   },
   "homepage": "http://gr2m.github.io/smartdate-input/",
   "dependencies": {
+    "@gr2m/frontend-test-setup": "git+https://github.com/gr2m/frontend-test-setup.git",
     "jquery": "^2.1.4",
-    "moment-parseformat": "^2.0.0",
-    "moment": "^2.10.6"
+    "moment": "^2.10.6",
+    "moment-parseformat": "^2.0.0"
   },
   "devDependencies": {
-    "beefy": "^2.1.5",
     "browserify": "^12.0.1",
     "chai": "^3.4.1",
-    "chai-as-promised": "^5.1.0",
-    "chalk": "^1.1.1",
     "gh-pages-deploy": "^0.3.0",
     "jquery": "^2.1.4",
     "mkdirp": "^0.5.1",
     "mocha": "^2.3.3",
     "moment": "^2.10.6",
     "moment-parseformat": "2.0.0",
-    "node-static": "^0.7.7",
-    "npmlog": "^2.0.0",
-    "request": "^2.65.0",
     "rimraf": "^2.4.3",
-    "sauce-connect-launcher": "^0.13.0",
     "semantic-release": "^6.0.3",
     "standard": "^5.3.1",
-    "sv-selenium": "^0.2.6",
-    "uglify-js": "^2.6.0",
-    "webdriverio": "^3.2.6"
+    "uglify-js": "^2.6.0"
   },
   "gh-pages-deploy": {
     "staticpath": "demo",
@@ -80,5 +67,14 @@
       "demo",
       "dist"
     ]
+  },
+  "frontend-test-setup": {
+    "server": {
+      "cwd": "demo",
+      "browserify": {
+        "/vendor.js": "lib/vendor.js",
+        "/smartdate-input.js": "index.js"
+      }
+    }
   }
 }
