@@ -52,7 +52,7 @@ describe('=== smartDate-input ===', function () {
       .call(done)
   })
 
-  it.skip('smartDate, options (https://github.com/gr2m/smartdate-input/pull/8)', function (done) {
+  it('smartDate, options', function (done) {
     this.client
       .url('/index.html')
       .execute("$('.input-lg').smartDate({date: 'Fri Oct 16 2015 13:03:37 GMT+0200 (CEST)', format: 'DD MM YY'})")
