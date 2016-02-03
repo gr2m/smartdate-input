@@ -138,6 +138,9 @@
     //
     //
     function updateSettings (newSettings) {
+      if (newSettings.date) {
+        api.set(newSettings.date)
+      }
       if (newSettings.format) {
         api.setFormat(newSettings.format)
       }
