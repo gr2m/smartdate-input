@@ -1,5 +1,4 @@
 # smartDate Input – a jQuery plugin
-
 > A jQuery plugin that understands human date/time inputs & their format
 
 [![Build Status](https://travis-ci.org/gr2m/smartdate-input.svg?branch=master)](https://travis-ci.org/gr2m/smartdate-input)
