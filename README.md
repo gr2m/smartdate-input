@@ -1,5 +1,4 @@
-smartDate Input – a jQuery plugin
-=================================
+# smartDate Input – a jQuery plugin
 
 > A jQuery plugin that understands human date/time inputs & their format
 
@@ -7,8 +6,7 @@ smartDate Input – a jQuery plugin
 [![Dependency Status](https://david-dm.org/gr2m/smartdate-input.svg)](https://david-dm.org/gr2m/smartdate-input)
 [![devDependency Status](https://david-dm.org/gr2m/smartdate-input/dev-status.svg)](https://david-dm.org/gr2m/smartdate-input#info=devDependencies)
 
-Download
---------
+## Install
 
 Download latest version from http://gr2m.github.io/smartdate-input/smartdate-input.js
 
@@ -19,8 +17,7 @@ npm install --save smartdate-input
 ```
 
 
-Usage
------
+## Usage
 
 ```js
 var $input = $('input');
@@ -119,8 +116,7 @@ SAUCELABS_USERNAME=username SAUCELABS_ACCESS_KEY=accesskey CLIENT='saucelabs:int
 SAUCELABS_USERNAME=username SAUCELABS_ACCESS_KEY=accesskey CLIENT='saucelabs:internet explorer:10.0:Windows 8' npm test
 ```
 
-Fine Print
-----------
+## Fine Print
 
 The smartDate Input Plugin have been authored by
 [Gregor Martynus](https://github.com/gr2m) ([@gr2m](https://twitter.com/gr2m)),
