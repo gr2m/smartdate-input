@@ -5,16 +5,41 @@
 [![Dependency Status](https://david-dm.org/gr2m/smartdate-input.svg)](https://david-dm.org/gr2m/smartdate-input)
 [![devDependency Status](https://david-dm.org/gr2m/smartdate-input/dev-status.svg)](https://david-dm.org/gr2m/smartdate-input#info=devDependencies)
 
-## Install
+## Download / Installation
 
-Download latest version from http://gr2m.github.io/smartdate-input/smartdate-input.js
+You can download the latest JS code here:
 
-Install using [npm](https://www.npmjs.com/):
+- https://npmcdn.com/smartdate-input/dist/smartdate-input.js
+
+Simply add it to your HTML page, make sure to load [jQuery](http://jquery.com/),
+[moment](http://momentjs.com/) and [moment-parseformat](https://github.com/gr2m/moment-parseformat)
+
+```HTML
+<script src="jquery.js"></script>
+<script src="moment.js"></script>
+<script src="moment.parseFormat.js"></script>
+<script src="smartdat-input.js"></script>
+<!-- $('input').smartDate() is now available -->
+```
+
+Or install via [npm](https://www.npmjs.com/)
 
 ```
-npm install --save smartdate-input
+npm install --save expandable-input
 ```
 
+The JS code can be required with
+
+```js
+var jQuery = require('jquery')
+var moment = require('moment')
+moment.parseFormat = require('moment-parseformat')
+var expandableInput = require('expandable-input')
+
+// init
+expandableInput(jQuery, moment)
+// $('input').smartDate() is now available
+```
 
 ## Usage
 
