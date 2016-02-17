@@ -1,6 +1,6 @@
-(function ($, moment) {
-  'use strict'
+module.exports = smartdateInput
 
+function smartdateInput ($, moment) {
   // SMARTDATE INPUT CLASS DEFINITION
   // ================================
 
@@ -223,4 +223,9 @@
     $input.smartDate()
     $input.trigger($.Event(event))
   })
-})(global.jQuery, global.moment) // eslint-disable-line
+}
+
+// if run in a browser, init immediately
+if (typeof window !== 'undefined') {
+  smartdateInput(window.jQuery, window.moment)
+}
