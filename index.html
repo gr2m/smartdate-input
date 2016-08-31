@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>smartDate Input – a plugin</title>
+
+  <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="http://gr2m.github.io/editable-table/bootstrap-editable-table.css">
+  <style>
+  html, body { padding: 0; margin: 0; font-family: Helvetica, Arial; }
+  .main { padding: 18px; }
+  h1 { margin: 0; font-size: 28px; font-weight: bold; }
+  h6 { margin: 0; }
+  header { padding: 18px 18px 24px; background: #222; color: #fff; background-image: linear-gradient(90deg, #2C2A86 20.5%, #078D2D 20.5%, #078D2D 37.5%, #FCB20D 37.5%, #FCB20D 55.5%, #EC5100 55.5%, #EC5100 72.5%, #6A3C06 72.5%, #6A3C06 79.5%, #C01C1B 79.5%); /* hoodie hoodie hoodie! */ background-size: 300px 6px; background-repeat: repeat-x; background-position: 0 100%; }
+  header a { color: #fff !important; }
+  p.info { padding: 0; margin: 0; font-size: 10px; color: #888; }
+  p.info a { color: inherit; text-decoration: underline; }
+
+  .highlight {
+    margin: 12px -19px;
+    padding: 18px 18px 0;
+    background: #eee;
+    border: 1px solid #ddd;
+  }
+  input {
+    box-sizing: border-box;
+    width: 100%;
+    display: block;
+  }
+  .suggestions li:hover {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>smartDate Input</h1>
+    <h6>Made by the <a href="http://hood.ie">Hoodie Community</a>.</h6>
+  </header>
+
+  <div class="main">
+    <h3>smartDate Input</h3>
+    <p>
+      Enter a date / time in the input below. Use whatever format you prefer. But stick with English for now.
+    </p>
+
+    <div class="highlight">
+      <p>
+        <input class="input-lg" data-format-event="input">
+      </p>
+      <dl class="dl-horizontal">
+        <dt>Your format:</dt>
+        <dd><var name="format"></var></dd>
+        <dt>Moon Landing:</dt>
+        <dd><var name="check"></var></dd>
+      </dl>
+    </div>
+
+    <p>
+      What you see happening is that the input not only understands what date/time you mean, but
+      also you preferable date/time format, and applies that to the <a href="http://en.wikipedia.org/wiki/Moon_landing">Moon Landing</a>,
+      which took place precisely at July 24, 1969, 16:50:35 UTC.
+    </p>
+
+    <p>Here are some suggestions to play with</p>
+
+    <ul class="suggestions">
+      <li>Thursday 9:20pm</li>
+      <li>Thursday, February 6th, 2014 9:20pm</li>
+      <li>23:20</li>
+      <li>02/03/14</li>
+      <li>2014-01-10 20:00:15</li>
+      <li>Thursday at 9:20pm</li>
+    </ul>
+
+    <p>
+      Download &amp; see Instructions <a href="https://github.com/gr2m/bootstrap-smartdate-input">on Github</a>.<br>
+      Found a bug? Have an idea? Please <a href="https://github.com/gr2m/bootstrap-smartdate-input/issues/new">create an issue</a> &lt;3
+    </p>
+  </div>
+
+  <script src="vendor.js"></script>
+  <script src="http://gr2m.github.io/editable-table/bootstrap-editable-table.js"></script>
+  <script src="smartdate-input.js"></script>
+  <script>
+    var $format = $('var[name=format]');
+    var $check = $('var[name=check]');
+    var moonlandingTime = new Date('July 24, 1969, 16:50:35');
+    var $input = $('input');
+
+    $input.on('change:format change:timestamp', function(event, data) {
+      var dateString = $input.val();
+      var format = moment.parseFormat(dateString);
+
+      $format.text(format);
+      $check.text( moment(moonlandingTime).format(format) );
+    });
+
+    $('.suggestions').on('click', 'li', function (event) {
+      $input.smartDate('set', $(event.currentTarget).text());
+    });
+
+    // init with current date & show current format
+    $input.smartDate('set').trigger('change:format', ['dddd, MMMM D, YYYY h:mma']); // sets to now
+  </script>
+</body>
+</html>
