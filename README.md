@@ -9,7 +9,7 @@
 
 You can download the latest JS code here:
 
-- https://npmcdn.com/smartdate-input/dist/smartdate-input.js
+- https://unpkg.com/smartdate-input/dist/smartdate-input.js
 
 Simply add it to your HTML page, make sure to load [jQuery](http://jquery.com/),
 [moment](http://momentjs.com/) and [moment-parseformat](https://github.com/gr2m/moment-parseformat)
