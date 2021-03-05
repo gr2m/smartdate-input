@@ -22,10 +22,7 @@
     "presemantic-release": "npm run build",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/gr2m/smartdate-input.git"
-  },
+  "repository": "github:gr2m/smartdate-input",
   "keywords": [
     "date",
     "parse",
@@ -35,9 +32,6 @@
   ],
   "author": "Gregor Martynus <gregor@martynus.net>",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/gr2m/smartdate-input/issues"
-  },
   "homepage": "http://gr2m.github.io/smartdate-input/",
   "dependencies": {},
   "devDependencies": {
